@@ -120,7 +120,8 @@ class ballObject extends gameObject {
     constructor(x, y) {
         // x, y is the center of the ball
         super(x, y);
-        this.speed = 50 / FREQ
+        this.initSpeed = 50 / FREQ;
+        this.speed = this.initSpeed;
         this.radius = 10;
         let angle = Math.random() * Math.PI * 2;
         this.dx = this.speed * Math.cos(angle);
@@ -153,6 +154,9 @@ class ballObject extends gameObject {
                 eventEmitter.emit(Messages.GAME_END_LOSE);
             } else {
                 console.log('hit!');
+                // increase the speed for fun
+                let newSpeed = this.initSpeed * (Math.log(human.score/10 + 1) + 1);
+                this.updateSpeed(newSpeed);
                 eventEmitter.emit(Messages.BALL_HIT_EVENT, {hitDirection: "right", hitObject: "human"});
             }
         }
@@ -166,6 +170,13 @@ class ballObject extends gameObject {
                 eventEmitter.emit(Messages.BALL_HIT_EVENT, {hitDirection: "left", hitObject: "enemy"});
             }
         } 
+    }
+
+    updateSpeed(newSpeed) {
+        this.dx = this.dx * newSpeed / this.speed;
+        this.dy = this.dy * newSpeed / this.speed;
+        this.speed = newSpeed;
+        console.log('speed', Math.sqrt(this.dx**2 + this.dy**2));
     }
 
     continue() {
