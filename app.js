@@ -33,6 +33,7 @@ class EventEmitter {
 
 const canvas = document.getElementById("mycanvas");
 const ctx = canvas.getContext("2d");
+const FREQ = 5;
 
 let enemy,
     human,
@@ -65,7 +66,7 @@ class player extends gameObject {
         super(x, y);
         this.width = 20;
         this.height = 80;
-        this.speed = 40;
+        this.speed = 40 / FREQ;
     }
 }
 
@@ -95,7 +96,7 @@ class computerPlayer extends player {
             if (isPaused) {
                 clearInterval(id);
             }
-        }, 200)
+        }, 200 / FREQ)
     }
 
     continue() {
@@ -110,7 +111,7 @@ class computerPlayer extends player {
             if (isPaused) {
                 clearInterval(id);
             }
-        }, 200)
+        }, 200 / FREQ)
     }
 }
 
@@ -119,7 +120,7 @@ class ballObject extends gameObject {
     constructor(x, y) {
         // x, y is the center of the ball
         super(x, y);
-        this.speed = 50 / 5;
+        this.speed = 50 / FREQ
         this.radius = 10;
         let angle = Math.random() * Math.PI * 2;
         this.dx = this.speed * Math.cos(angle);
@@ -131,7 +132,7 @@ class ballObject extends gameObject {
             if (isPaused) {
                 clearInterval(id);
             }
-        }, 200 / 5)
+        }, 200 / FREQ)
     }
     
     checkStatus() {
@@ -146,8 +147,8 @@ class ballObject extends gameObject {
         }
         if (this.x + this.radius > canvas.width - human.width) {
             // check if the player hit the ball
-            if (this.y < human.y - human.height/2 || this.y > human.y + human.height/2) {
-                console.log('human', this.y, 'lower', human.y + human.height/2, 'upper', human.y - human.height/2);
+            if (this.y < human.y || this.y > human.y + human.height) {
+                console.log('human', this.y, 'lower', human.y + human.height, 'upper', human.y);
                 console.log(this.x, this.y);
                 eventEmitter.emit(Messages.GAME_END_LOSE);
             } else {
@@ -157,8 +158,8 @@ class ballObject extends gameObject {
         }
         if (this.x - this.radius < enemy.width) {
             // check if the player hit the ball
-            if (this.y < enemy.y - enemy.height/2 || this.y > enemy.y + enemy.height/2) {
-                console.log('enemy', this.y, 'lower', enemy.y + enemy.height/2, 'upper', enemy.y - enemy.height/2);
+            if (this.y < enemy.y || this.y > enemy.y + enemy.height) {
+                console.log('enemy', this.y, 'lower', enemy.y + enemy.height, 'upper', enemy.y);
                 console.log(this.x, this.y);
                 eventEmitter.emit(Messages.GAME_END_WIN);
             } else {
@@ -174,7 +175,7 @@ class ballObject extends gameObject {
             if (isPaused) {
                 clearInterval(id);
             }
-        }, 200 / 5)
+        }, 200 / FREQ)
     }
 
     draw() {
@@ -218,13 +219,13 @@ function initGame() {
     isPaused = false;
     // create listeners
     eventEmitter.on(Messages.KEY_EVENT_UP, () => {
-        if (!isPaused && human.y > human.height/2) {
+        if (!isPaused && human.y > 0) {
             human.y -= human.speed;
         }
     })
 
     eventEmitter.on(Messages.KEY_EVENT_DOWN, () => {
-        if (!isPaused && human.y < canvas.height - human.height/2) {
+        if (!isPaused && human.y < canvas.height - human.height) {
             human.y += human.speed;
         }
     })
@@ -325,7 +326,7 @@ function restartGame() {
         gameLoopId = setInterval(() => {
             updateGameObjects();
             drawGameObjects();
-        }, 200)
+        }, 200 / FREQ)
     }
 }
 
@@ -335,5 +336,5 @@ window.onload = async () => {
     gameLoopId = setInterval(() => {
         updateGameObjects();
         drawGameObjects();
-    }, 200)
+    }, 200 / FREQ)
 }
