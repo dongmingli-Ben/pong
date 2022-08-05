@@ -40,7 +40,13 @@ let enemy,
     ball,
     isPaused = false,
     gameLoopId,
+    backgroundImg = new Image(),
     eventEmitter = new EventEmitter();
+
+backgroundImg.src = "./background.png";
+backgroundImg.onload = () => {
+    ctx.drawImage(backgroundImg, 0, 0);
+}
 
 class gameObject {
     
@@ -320,6 +326,7 @@ function drawGameObjects() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImg, 0, 0);
     human.draw();
     enemy.draw();
     ball.draw();
