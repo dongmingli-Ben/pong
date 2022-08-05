@@ -43,7 +43,7 @@ let enemy,
     backgroundImg = new Image(),
     eventEmitter = new EventEmitter();
 
-backgroundImg.src = "./asset/pong_table.png";
+backgroundImg.src = "./asset/pong_table.jpeg";
 backgroundImg.onload = () => {
     ctx.save();
     ctx.globalAlpha = 0.5;
