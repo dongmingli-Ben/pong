@@ -43,7 +43,7 @@ let enemy,
     backgroundImg = new Image(),
     eventEmitter = new EventEmitter();
 
-backgroundImg.src = "./background.png";
+backgroundImg.src = "./asset/background.png";
 backgroundImg.onload = () => {
     ctx.drawImage(backgroundImg, 0, 0);
 }
