@@ -43,9 +43,12 @@ let enemy,
     backgroundImg = new Image(),
     eventEmitter = new EventEmitter();
 
-backgroundImg.src = "./asset/background.png";
+backgroundImg.src = "./asset/pong_table.png";
 backgroundImg.onload = () => {
-    ctx.drawImage(backgroundImg, 0, 0);
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
 }
 
 class gameObject {
@@ -277,6 +280,10 @@ function initGame() {
             ctx.clearRect(0, 0, canvas.widht, canvas.height);
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.globalAlpha = 0.5;
+            ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
             displayMessage("You have WON!! Press [Enter] to start another game!", "green");
         }, 100);
     })
@@ -287,6 +294,10 @@ function initGame() {
             ctx.clearRect(0, 0, canvas.widht, canvas.height);
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.globalAlpha = 0.5;
+            ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
             displayMessage("Ohh~ You LOSE :( Press [Enter] to start another game ...", "red");
         }, 100);
     })
@@ -326,7 +337,10 @@ function drawGameObjects() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImg, 0, 0);
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
     human.draw();
     enemy.draw();
     ball.draw();
