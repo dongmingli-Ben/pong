@@ -41,6 +41,9 @@ let enemy,
     isPaused = false,
     gameLoopId,
     backgroundImg = new Image(),
+    hitSound = new Audio("./asset/pong_hit.wav"),
+    winSound = new Audio("./asset/win.wav"),
+    loseSound = new Audio("./asset/lose.wav");
     eventEmitter = new EventEmitter();
 
 backgroundImg.src = "./asset/pong_table.jpeg";
@@ -263,6 +266,7 @@ function initGame() {
     })
 
     eventEmitter.on(Messages.BALL_HIT_EVENT, (_, { hitDirection, hitObject }) => {
+        hitSound.play();
         if (hitObject === "human") {
             human.score += 10;
         }
@@ -285,6 +289,7 @@ function initGame() {
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
             displayMessage("You have WON!! Press [Enter] to start another game!", "green");
+            winSound.play();
         }, 100);
     })
     
@@ -299,6 +304,7 @@ function initGame() {
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
             displayMessage("Ohh~ You LOSE :( Press [Enter] to start another game ...", "red");
+            loseSound.play();
         }, 100);
     })
 
