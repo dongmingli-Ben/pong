@@ -46,8 +46,11 @@ let enemy,
     winSound = new Audio("./asset/win.wav"),
     loseSound = new Audio("./asset/lose.wav"),
     eventEmitter = new EventEmitter();
-
-backgroundImg.src = "./asset/pong_table.jpeg";
+    
+backgroundImg.onload = () => {
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+}
+// backgroundImg.src = "./asset/pong_table.jpeg";
 
 class gameObject {
     
@@ -357,7 +360,7 @@ function drawGameObjects(canvas, ctx) {
     }
 }
 
-export function restartGame(backgrounPath = 'asset/pong_table.jpeg',
+export function restartGame(backgroundPath = 'asset/pong_table.jpeg',
                             backgroundAlpha = 0.5,
                             gameAlpha = 1.0,
                             ballColor = "white") {
@@ -369,13 +372,10 @@ export function restartGame(backgrounPath = 'asset/pong_table.jpeg',
     eventEmitter.clear();
     initGame(canvas, ctx);
     // set game settings
-    backgroundImg.src = backgrounPath;
+    backgroundImg.src = backgroundPath;
     BACKGROUNDALPHA = backgroundAlpha;
     ALPHA = gameAlpha;
     ball.color = ballColor;
-    backgroundImg.onload = () => {
-        ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-    }
 
     gameLoopId = setInterval(() => {
         updateGameObjects(canvas);
