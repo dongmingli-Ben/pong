@@ -2,7 +2,42 @@ html,
 body {
   width: 100%;
   height: 100%;
+  min-height: 100% !important;
   margin: 0;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  min-height: 100% !important;
+  text-align: center;
+  display: table;
+}
+
+.introduction {
+  margin: auto;
+  padding: 0% 0;
+  position: relative;
+  height: 100%;
+  min-height: 100% !important;
+  display: table-cell; 
+  vertical-align: middle;
+  color: rgb(239, 101, 16);
+  background-image: url("asset/intro.png");
+  background-size: cover;
+  /* box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: hidden; */
+  /* border: 3px solid green; */
+}
+
+h1, h2 {
+  margin: 0;
+}
+
+p {
+  margin: 5%;
+  font-size: 1.2em;
 }
 
 canvas {
