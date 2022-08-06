@@ -33,6 +33,8 @@ class EventEmitter {
 
 
 const FREQ = 5;  // frequency of the game loop
+let BACKGROUNDALPHA = 0.9; // transparency of the background image
+let ALPHA = 0.5; //transparency of the game objects
 
 let enemy,
     human,
@@ -55,13 +57,16 @@ class gameObject {
         this.height = 0;
         this.width = 0;
         this.type = "";
-        this.color = "white";
+        this.color = "gray";
         this.speed = 0;
     }
 
     draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = ALPHA;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.restore();
     }
 }
 
@@ -255,7 +260,10 @@ function initGame(canvas, ctx) {
     })
 
     eventEmitter.on(Messages.KEY_EVENT_ENTER, () => {
-        restartGame();
+        restartGame(backgroundImg.src,
+                    BACKGROUNDALPHA,
+                    ALPHA,
+                    ball.color);
     })
 
     eventEmitter.on(Messages.BALL_HIT_EVENT, (_, { hitDirection, hitObject }) => {
@@ -278,7 +286,7 @@ function initGame(canvas, ctx) {
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            ctx.globalAlpha = 0.5;
+            ctx.globalAlpha = BACKGROUNDALPHA;
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
             displayMessage(canvas, ctx, "You have WON!! Press [Enter] to start another game!", "green");
@@ -293,7 +301,7 @@ function initGame(canvas, ctx) {
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            ctx.globalAlpha = 0.5;
+            ctx.globalAlpha = BACKGROUNDALPHA;
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
             displayMessage(canvas, ctx, "Ohh~ You LOSE :( Press [Enter] to start another game ...", "red");
@@ -337,7 +345,7 @@ function drawGameObjects(canvas, ctx) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.save();
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = BACKGROUNDALPHA;
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     ctx.restore();
     human.draw(ctx);
@@ -349,7 +357,10 @@ function drawGameObjects(canvas, ctx) {
     }
 }
 
-export function restartGame() {
+export function restartGame(backgrounPath = 'asset/pong_table.jpeg',
+                            backgroundAlpha = 0.5,
+                            gameAlpha = 1.0,
+                            ballColor = "white") {
     const canvas = document.getElementById("mycanvas");
     const ctx = canvas.getContext("2d");
     if (gameLoopId) {
@@ -357,6 +368,12 @@ export function restartGame() {
     }
     eventEmitter.clear();
     initGame(canvas, ctx);
+    // set game settings
+    backgroundImg.src = backgrounPath;
+    BACKGROUNDALPHA = backgroundAlpha;
+    ALPHA = gameAlpha;
+    ball.color = ballColor;
+
     gameLoopId = setInterval(() => {
         updateGameObjects(canvas);
         drawGameObjects(canvas, ctx);
