@@ -373,6 +373,9 @@ export function restartGame(backgrounPath = 'asset/pong_table.jpeg',
     BACKGROUNDALPHA = backgroundAlpha;
     ALPHA = gameAlpha;
     ball.color = ballColor;
+    backgroundImg.onload = () => {
+        ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    }
 
     gameLoopId = setInterval(() => {
         updateGameObjects(canvas);
