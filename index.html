@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>The Pong Game</title>
         <link rel="stylesheet" href="./style.css" />
+        <script type="module" src="app.js"></script>
     </head>
     <body>
-        <canvas id="mycanvas" height="768px" width="1440px"></canvas>
-        <script src="app.js"></script>
+        <div id="app">Loading ...</div>
+        <template id="intro">
+            <h1>Welcome to the Pong game</h1>
+            <p>
+                Use [UpArrow] and [DownArrow] keys to control</br>
+                Press [Enter] key to start a new game</br>
+                Press [Spacebar] key to suspend and resume the game
+            </p>
+            <h2>Click anywhere to begin the game</h2>
+        </template>
+        <template id="game">
+            <canvas id="mycanvas" height="768px" width="1440px"></canvas>
+        </template>
     </body>
 </html>
