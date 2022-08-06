@@ -31,9 +31,8 @@ class EventEmitter {
     }
 }
 
-const canvas = document.getElementById("mycanvas");
-const ctx = canvas.getContext("2d");
-const FREQ = 5;
+
+const FREQ = 5;  // frequency of the game loop
 
 let enemy,
     human,
@@ -47,12 +46,6 @@ let enemy,
     eventEmitter = new EventEmitter();
 
 backgroundImg.src = "./asset/pong_table.jpeg";
-backgroundImg.onload = () => {
-    ctx.save();
-    ctx.globalAlpha = 0.5;
-    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-    ctx.restore();
-}
 
 class gameObject {
     
@@ -66,7 +59,7 @@ class gameObject {
         this.speed = 0;
     }
 
-    draw() {
+    draw(ctx) {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
@@ -148,7 +141,7 @@ class ballObject extends gameObject {
         }, 200 / FREQ)
     }
     
-    checkStatus() {
+    checkStatus(canvas) {
         // check boundary
         if (this.y < 0 + this.radius) {
             // hit upper wall
@@ -201,7 +194,7 @@ class ballObject extends gameObject {
         }, 200 / FREQ)
     }
 
-    draw() {
+    draw(ctx) {
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
@@ -238,7 +231,7 @@ window.addEventListener("keydown", (evt) => {
 
 
 
-function initGame() {
+function initGame(canvas, ctx) {
     isPaused = false;
     // create listeners
     eventEmitter.on(Messages.KEY_EVENT_UP, () => {
@@ -288,7 +281,7 @@ function initGame() {
             ctx.globalAlpha = 0.5;
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
-            displayMessage("You have WON!! Press [Enter] to start another game!", "green");
+            displayMessage(canvas, ctx, "You have WON!! Press [Enter] to start another game!", "green");
             winSound.play();
         }, 100);
     })
@@ -303,7 +296,7 @@ function initGame() {
             ctx.globalAlpha = 0.5;
             ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
             ctx.restore();
-            displayMessage("Ohh~ You LOSE :( Press [Enter] to start another game ...", "red");
+            displayMessage(canvas, ctx, "Ohh~ You LOSE :( Press [Enter] to start another game ...", "red");
             loseSound.play();
         }, 100);
     })
@@ -313,33 +306,33 @@ function initGame() {
     enemy = new computerPlayer(0, canvas.height/2-40);
 }
 
-function displayMessage(message, color) {
+function displayMessage(canvas, ctx, message, color) {
     ctx.font = "30px Arial";
     ctx.fillStyle = color;
     ctx.textAlign = "center";
     ctx.fillText(message, canvas.width/2, canvas.height/2);
 }
 
-function displayScore() {
+function displayScore(canvas, ctx) {
     ctx.font = "30px Arial";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText(`Score: ${human.score}`, canvas.width/2, 30);
 }
 
-function displayPauseMessage() {
+function displayPauseMessage(canvas, ctx) {
     ctx.font = "30px Arial";
     ctx.fillStyle = "red";
     ctx.textAlign = "center";
     ctx.fillText("Press [Spacebar] to continue to game", canvas.width/2, canvas.height/2);
 }
 
-function updateGameObjects() {
-    ball.checkStatus();
+function updateGameObjects(canvas) {
+    ball.checkStatus(canvas);
 }
 
 
-function drawGameObjects() {
+function drawGameObjects(canvas, ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -347,32 +340,36 @@ function drawGameObjects() {
     ctx.globalAlpha = 0.5;
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     ctx.restore();
-    human.draw();
-    enemy.draw();
-    ball.draw();
-    displayScore();
+    human.draw(ctx);
+    enemy.draw(ctx);
+    ball.draw(ctx);
+    displayScore(canvas, ctx);
     if (isPaused) {
-        displayPauseMessage();
+        displayPauseMessage(canvas, ctx);
     }
 }
 
 function restartGame() {
+    const canvas = document.getElementById("mycanvas");
+    const ctx = canvas.getContext("2d");
     if (gameLoopId) {
         clearInterval(gameLoopId);
         eventEmitter.clear();
-        initGame();
+        initGame(canvas, ctx);
         gameLoopId = setInterval(() => {
-            updateGameObjects();
-            drawGameObjects();
+            updateGameObjects(canvas);
+            drawGameObjects(canvas, ctx);
         }, 200 / FREQ)
     }
 }
 
 
 window.onload = async () => {
-    initGame();
+    const canvas = document.getElementById("mycanvas");
+    const ctx = canvas.getContext("2d");
+    initGame(canvas, ctx);
     gameLoopId = setInterval(() => {
-        updateGameObjects();
-        drawGameObjects();
+        updateGameObjects(canvas);
+        drawGameObjects(canvas, ctx);
     }, 200 / FREQ)
 }
