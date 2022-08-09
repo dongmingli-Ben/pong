@@ -38,6 +38,7 @@ h1, h2 {
 p {
   margin: 5%;
   font-size: 1.2em;
+  color: rgb(240, 6, 158);
 }
 
 canvas {
