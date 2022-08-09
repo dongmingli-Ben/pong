@@ -1,10 +1,20 @@
-import { restartGame } from "./game.js";
+import { endGame, restartGame } from "./game.js";
+
+function returnToIntroduction(evt) {
+    if (evt.key == 'Escape') {
+        window.removeEventListener('keydown', returnToIntroduction);
+        endGame();
+        showIntroduction();
+    }
+}
 
 
 function startGame(mode) {
     const app = document.getElementById('app');
     const template = document.getElementById('game');
     const view = template.content.cloneNode(true);
+
+    window.addEventListener('keydown', returnToIntroduction);
 
     app.innerHTML = '';
     app.appendChild(view);
@@ -28,15 +38,17 @@ function showIntroduction() {
     const playBotton = document.getElementById('playing');
     fishButton.onclick = () => startGame('fishing');
     playBotton.onclick = () => startGame('playing');
+
+    const songButton = document.getElementById('birthday-song');
+    songButton.onclick = () => {
+        if (!birthdaySong.paused) {
+            birthdaySong.pause();
+        } else {
+            birthdaySong.play();
+        }
+    };
 }
 
-// let gameStarted = false;
-
-// window.addEventListener('click', (e) => {
-//     if (gameStarted === false) {
-//         gameStarted = true;
-//         startGame();
-//     }
-// });
+let birthdaySong = new Audio('asset/birthday_song.mp3');
 
 window.onload = async () => showIntroduction();

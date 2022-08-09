@@ -47,10 +47,6 @@ let enemy,
     loseSound = new Audio("./asset/lose.wav"),
     eventEmitter = new EventEmitter();
     
-backgroundImg.onload = () => {
-    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-}
-// backgroundImg.src = "./asset/pong_table.jpeg";
 
 class gameObject {
     
@@ -366,13 +362,16 @@ export function restartGame(backgroundPath = 'asset/pong_table.jpeg',
                             ballColor = "white") {
     const canvas = document.getElementById("mycanvas");
     const ctx = canvas.getContext("2d");
-    if (gameLoopId) {
-        clearInterval(gameLoopId);
-    }
-    eventEmitter.clear();
+    endGame();
     initGame(canvas, ctx);
     // set game settings
     backgroundImg.src = backgroundPath;
+    backgroundImg.onload = () => {
+        ctx.save();
+        ctx.globalAlpha = BACKGROUNDALPHA;
+        ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
     BACKGROUNDALPHA = backgroundAlpha;
     ALPHA = gameAlpha;
     ball.color = ballColor;
@@ -381,4 +380,11 @@ export function restartGame(backgroundPath = 'asset/pong_table.jpeg',
         updateGameObjects(canvas);
         drawGameObjects(canvas, ctx);
     }, 200 / FREQ)
+}
+
+export function endGame() {
+    if (gameLoopId) {
+        clearInterval(gameLoopId);
+    }
+    eventEmitter.clear();
 }

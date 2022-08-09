@@ -77,3 +77,19 @@ canvas {
 #playing {
   background-color: coral;
 }
+
+.nobr { 
+  white-space: nowrap;
+  display: inline;
+  vertical-align: middle;
+}
+
+.song-btn {
+  background: url("asset/music-note.png") no-repeat center center;
+  background-size: cover;
+  /* color: #000000; */
+  border: none;
+  cursor: pointer;
+  padding: 20px 20px;
+  margin: 0.3%;
+}
